@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Calendar, Flag, X, Send } from 'lucide-react';
-import { useApp } from '../context/AppContext';
+import { useApp } from '../hooks/useApp';
 import clsx from 'clsx';
 
 interface AddTaskFormProps {
@@ -43,7 +43,7 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({
       onCancel();
     }
     if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
-      handleSubmit(e as any);
+      handleSubmit(e as React.FormEvent);
     }
   };
 
@@ -89,7 +89,7 @@ const AddTaskForm: React.FC<AddTaskFormProps> = ({
             <Flag className="w-4 h-4 text-gray-400" />
             <select
               value={priority}
-              onChange={(e) => setPriority(e.target.value as any)}
+              onChange={(e) => setPriority(e.target.value as 'low' | 'medium' | 'high')}
               className="text-sm border border-gray-200 rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-red-500"
             >
               <option value="low">Low priority</option>

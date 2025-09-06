@@ -1,6 +1,28 @@
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import React, { createContext, useReducer, useEffect } from 'react';
 import type { Task, Project, AppState, ViewMode } from '../types';
 import { isToday, isTomorrow, isThisWeek } from 'date-fns';
+
+interface SavedTask {
+  id: string;
+  title: string;
+  description?: string;
+  completed: boolean;
+  projectId: string;
+  priority: 'low' | 'medium' | 'high';
+  dueDate?: string;
+  createdAt: string;
+  updatedAt: string;
+  labels: string[];
+}
+
+interface SavedProject {
+  id: string;
+  name: string;
+  color: string;
+  icon?: string;
+  tasksCount: number;
+  createdAt: string;
+}
 
 interface AppContextType extends AppState {
   addTask: (task: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>) => void;
@@ -142,6 +164,8 @@ const appReducer = (state: AppState, action: AppAction): AppState => {
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
+export { AppContext };
+
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(appReducer, initialState);
 
@@ -152,14 +176,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       try {
         const parsed = JSON.parse(savedData);
         // Convert date strings back to Date objects
-        const tasks = parsed.tasks?.map((task: any) => ({
+        const tasks = parsed.tasks?.map((task: SavedTask) => ({
           ...task,
           createdAt: new Date(task.createdAt),
           updatedAt: new Date(task.updatedAt),
           dueDate: task.dueDate ? new Date(task.dueDate) : undefined,
         })) || [];
         
-        const projects = parsed.projects?.map((project: any) => ({
+        const projects = parsed.projects?.map((project: SavedProject) => ({
           ...project,
           createdAt: new Date(project.createdAt),
         })) || initialState.projects;
@@ -261,12 +285,4 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
-};
-
-export const useApp = () => {
-  const context = useContext(AppContext);
-  if (context === undefined) {
-    throw new Error('useApp must be used within an AppProvider');
-  }
-  return context;
 };

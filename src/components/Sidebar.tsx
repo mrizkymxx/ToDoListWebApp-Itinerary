@@ -7,7 +7,7 @@ import {
   Search,
   Filter
 } from 'lucide-react';
-import { useApp } from '../context/AppContext';
+import { useApp } from '../hooks/useApp';
 import clsx from 'clsx';
 
 const Sidebar: React.FC = () => {

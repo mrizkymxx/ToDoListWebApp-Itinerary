@@ -3,7 +3,7 @@ import { Check, Calendar, Flag, MoreHorizontal } from 'lucide-react';
 import { format, isToday, isTomorrow } from 'date-fns';
 import clsx from 'clsx';
 import type { Task } from '../types';
-import { useApp } from '../context/AppContext';
+import { useApp } from '../hooks/useApp';
 
 interface TaskItemProps {
   task: Task;

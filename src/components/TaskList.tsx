@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Plus, Calendar, Inbox, Filter, CalendarDays } from 'lucide-react';
 import TaskItem from './TaskItem';
 import AddTaskForm from './AddTaskForm';
-import { useApp } from '../context/AppContext';
+import { useApp } from '../hooks/useApp';
 import { format } from 'date-fns';
 
 const TaskList: React.FC = () => {
@@ -25,9 +25,10 @@ const TaskList: React.FC = () => {
         return 'Today';
       case 'upcoming':
         return 'Upcoming';
-      case 'project':
+      case 'project': {
         const project = projects.find(p => p.id === selectedProjectId);
         return project?.name || 'Unknown Project';
+      }
       default:
         return 'Tasks';
     }
@@ -39,7 +40,7 @@ const TaskList: React.FC = () => {
         return <Calendar className="w-5 h-5" />;
       case 'upcoming':
         return <CalendarDays className="w-5 h-5" />;
-      case 'project':
+      case 'project': {
         const project = projects.find(p => p.id === selectedProjectId);
         if (project?.id === 'inbox') {
           return <Inbox className="w-5 h-5" />;
@@ -50,6 +51,7 @@ const TaskList: React.FC = () => {
             style={{ backgroundColor: project?.color || '#3b82f6' }}
           />
         );
+      }
       default:
         return <Filter className="w-5 h-5" />;
     }
